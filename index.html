@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#07101a">
+<meta name="theme-color" content="#F8F5F4">
 <title>Wr3n Frost DK — Mythic+ Command Center</title>
 <style>
 :root{
@@ -59,6 +59,92 @@ input,select{width:100%;background:#08111d;color:var(--text);border:1px solid #2
 .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:14px;background:rgba(0,0,0,.72);z-index:20}.modal.open{display:flex}.modalbox{width:100%;max-width:520px;background:#0d1725;border:1px solid var(--line);border-radius:15px;padding:16px}.modalgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
 @media(max-width:850px){.stats{grid-template-columns:1fr 1fr}.two{grid-template-columns:1fr}.trainerHead{grid-template-columns:1fr 1fr}.abilities{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:560px){.app{padding:10px}.val{font-size:25px}.trainerHead,.learn{grid-template-columns:1fr 1fr}.abilities{grid-template-columns:repeat(2,1fr)}.resources{grid-template-columns:repeat(3,1fr)}.modalgrid{grid-template-columns:1fr}.vaults{grid-template-columns:1fr 1fr 1fr}}
+
+
+/* ===== WR3N BERRY / APPLE-STYLE REDESIGN ===== */
+:root{
+ --bg:#f8f5f4;
+ --p:#fffdfc;
+ --p2:#f4eeec;
+ --line:#e8dedb;
+ --text:#2f2b2d;
+ --muted:#7f7479;
+ --ice:#d893a4;
+ --ice2:#8a5361;
+ --good:#648f74;
+ --warn:#ce8127;
+ --bad:#b45668;
+ --vio:#d8bfce;
+ --berry-salmon:#e5a38f;
+ --berry-lavender:#d8bfce;
+ --berry-cream:#eddfd9;
+ --berry-orange:#ce8127;
+ --berry-rose:#d893a4;
+ --shadow:0 10px 30px rgba(91,65,72,.08);
+}
+html{background:var(--bg)}
+body{
+ color:var(--text);
+ font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Helvetica Neue","Segoe UI",Arial,sans-serif;
+ background:
+   radial-gradient(circle at 5% 0%,rgba(229,163,143,.23),transparent 30%),
+   radial-gradient(circle at 96% 4%,rgba(216,147,164,.18),transparent 32%),
+   linear-gradient(180deg,#fcf9f8 0%,#f7f2f1 100%);
+ letter-spacing:-.01em;
+ min-height:100vh;
+}
+.app{max-width:1280px;padding:24px 24px 36px}
+.top{padding:4px 2px 2px}
+h1{font-size:clamp(29px,4vw,46px);font-weight:650;letter-spacing:-.045em;color:#211f20}
+.sub{color:var(--muted);font-size:13px;font-weight:450;letter-spacing:0}
+.badge{border:0;background:rgba(216,147,164,.18);color:#8b5361;font-weight:700;letter-spacing:.09em;padding:6px 9px}
+.btn{
+ border:1px solid rgba(89,69,75,.11);
+ background:rgba(255,255,255,.76);
+ color:#433b3e;
+ border-radius:13px;
+ padding:10px 14px;
+ font-weight:620;
+ box-shadow:0 2px 8px rgba(70,50,56,.04);
+ backdrop-filter:blur(14px);
+ transition:.18s ease;
+}
+.btn:hover{border-color:rgba(216,147,164,.55);transform:translateY(-1px);box-shadow:0 8px 18px rgba(99,68,78,.08)}
+.btn.primary{background:linear-gradient(135deg,#d893a4,#c67f92);border-color:transparent;color:white;box-shadow:0 8px 20px rgba(216,147,164,.22)}
+.tabs{gap:7px;margin:18px 0 20px;padding:5px;background:rgba(255,255,255,.56);border:1px solid rgba(89,69,75,.08);border-radius:17px;width:max-content;max-width:100%;box-shadow:0 4px 18px rgba(75,54,60,.04)}
+.tabbtn{background:transparent;border-color:transparent;box-shadow:none;color:#6c6166}
+.tabbtn.active{background:#fff;border-color:rgba(89,69,75,.08);color:#6d3e49;box-shadow:0 4px 14px rgba(78,56,63,.08)}
+.card{background:rgba(255,253,252,.91);border:1px solid rgba(99,72,80,.09);border-radius:22px;padding:18px;box-shadow:var(--shadow);backdrop-filter:blur(10px)}
+.small,label.small{font-size:10px;color:#92858a;font-weight:680;letter-spacing:.105em}
+.val{font-size:34px;font-weight:680;letter-spacing:-.045em;color:#332e30}.ice{color:#a95f73}.good{color:var(--good)}.warn{color:#b56e20}.bad{color:var(--bad)}
+h2{font-size:18px;font-weight:670;letter-spacing:-.025em}h3{font-size:14px;font-weight:660}.note{color:#8b7e83;font-size:12px;line-height:1.45}
+.progress{height:8px;background:#efe7e4;border:0;border-radius:999px}.progress>div{background:linear-gradient(90deg,#e5a38f,#d893a4)}
+table{overflow:hidden;border-radius:14px}th,td{border-bottom:1px solid #efe7e4;padding:10px 8px}th{color:#95888d;font-weight:690}
+input,select{background:#fbf7f5;color:#332f31;border:1px solid #e6dad7;border-radius:12px;padding:9px 10px}input:focus,select:focus{border-color:#d893a4;box-shadow:0 0 0 3px rgba(216,147,164,.12)}
+.vault{border:1px solid #eadfdb;background:#fbf7f5;border-radius:15px}.vault.done{border-color:#bdcfbf;background:#f0f6f1}
+.pill{background:#f7e7eb;border:1px solid #ecd1d8;color:#925568;border-radius:999px}
+.rioBar{margin-top:16px}.rioStatus{border:1px solid #eadfdb;background:rgba(255,255,255,.7);color:#83777c}
+.rioStatus.live .rioDot{background:#6e9b7d;box-shadow:0 0 8px rgba(100,143,116,.35)}
+.nextKey{background:linear-gradient(135deg,rgba(216,191,206,.58),rgba(237,223,217,.74) 50%,rgba(229,163,143,.35));border-color:rgba(129,86,98,.08)}
+.nextKeyDungeon{color:#5f414a;font-size:27px;font-weight:680;letter-spacing:-.035em}.nextKeyLevel{color:#aa6476;font-weight:720;letter-spacing:-.05em}.recReason{color:#75696d;line-height:1.45}
+.rioMeta>div{background:rgba(255,255,255,.66);border:1px solid rgba(112,80,89,.08);border-radius:14px}.rioMeta b{font-weight:680;color:#463d40}
+.stats .card:nth-child(1){background:linear-gradient(145deg,#f7d7cd,#f3c9bc)}
+.stats .card:nth-child(2){background:linear-gradient(145deg,#eadce5,#ddc7d5)}
+.stats .card:nth-child(3){background:linear-gradient(145deg,#f8f1ed,#efe3dd)}
+.stats .card:nth-child(4){background:linear-gradient(145deg,#e0a14c,#ce8127);color:white}
+.stats .card:nth-child(4) .small,.stats .card:nth-child(4) .note,.stats .card:nth-child(4) .warn{color:white}
+.run{border-bottom:1px solid #eee4e1}.gear{gap:8px}.iconbtn{background:#fbf4f5;border:1px solid #ead8dd;color:#aa5f70;border-radius:11px}.footer{color:#97898e}
+.arena{background:linear-gradient(180deg,#fffaf8,#f5ece9);border:1px solid #e6d9d5;border-radius:22px;box-shadow:var(--shadow)}
+.scorebox,.resource,.lesson{background:rgba(255,255,255,.7);border:1px solid #eadfdb;border-radius:14px}.enemyIcon{filter:none}.scenario{color:#82767a}.proc{background:#f7f0f2;border-color:#e5d5da;color:#6d5960}.proc.km{border-color:#e4b2c0;color:#8d5364}.proc.rime{border-color:#d7c3d6;color:#735e73}.proc.ex{border-color:#ebc1b4;color:#8d5f51}
+.ability{background:linear-gradient(180deg,#fff,#f7efec);color:#3a3336;border:1px solid #e5d9d5;border-radius:15px;box-shadow:0 5px 14px rgba(78,54,61,.05)}.ability:hover{border-color:#d893a4}.ability.recommended{box-shadow:0 0 0 3px rgba(216,147,164,.14) inset}.feedback{background:#fff9f7;border:1px solid #eadfdb;border-radius:15px}.feedback.correct{border-color:#afcab6;background:#f4f9f5}.feedback.wrong{border-color:#dfb2bc;background:#fff5f6}
+.priority div{border-bottom:1px solid #eee5e2}.priority div:before{background:#f6e5ea;border:0;color:#98596b}.kbd{background:#f5eeec;color:#554b4f;border-color:#ddcfcb}
+.modal{background:rgba(55,43,47,.34);backdrop-filter:blur(8px)}.modalbox{background:#fffaf8;border:1px solid #eadfdb;border-radius:22px;box-shadow:0 30px 70px rgba(54,37,43,.18)}
+/* BiS table accents */
+#bis .card:first-child{background:linear-gradient(135deg,rgba(216,191,206,.55),rgba(255,253,252,.95))}
+#bis table tbody tr:hover{background:rgba(216,147,164,.055)}
+#bis .pill{font-weight:650}
+@media(max-width:850px){.app{padding:16px}.tabs{width:100%}.tabbtn{flex:1}.stats{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.app{padding:10px}.card{border-radius:18px;padding:14px}.tabs{border-radius:14px}.tabbtn{flex:none}.val{font-size:29px}}
 </style>
 </head>
 <body>
