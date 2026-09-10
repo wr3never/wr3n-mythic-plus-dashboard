@@ -75,6 +75,7 @@ input,select{width:100%;background:#08111d;color:var(--text);border:1px solid #2
 
  <div class="tabs">
   <button class="btn tabbtn active" onclick="tab('dash',this)">📊 Dashboard</button>
+  <button class="btn tabbtn" onclick="tab('bis',this)">🛡 Best in Slot</button>
   <button class="btn tabbtn" onclick="tab('train',this)">⚔ Top-DPS Rotation Trainer</button>
  </div>
 
@@ -130,6 +131,8 @@ input,select{width:100%;background:#08111d;color:var(--text);border:1px solid #2
    </div>
   </div>
  </section>
+
+ <section id="bis" class="tab"><div class="card nextKey" style="margin-bottom:13px"><div class="small">MIDNIGHT SEASON 2 • FROST DEATH KNIGHT</div><div class="nextKeyMain"><div><div class="nextKeyDungeon">Best in Slot Tracker</div><div class="recReason">Track the pieces you own and use the farm priority below to decide what to chase next. BiS is a target list, not a substitute for simming your exact character.</div></div><div style="text-align:right"><div class="small">COLLECTED</div><div class="nextKeyLevel" id="bisCount">0/16</div></div></div></div><div class="grid two"><div class="card"><h2>What should I farm next?</h2><div id="bisNext"></div><div class="note" style="margin-top:10px">High-impact special-effect pieces are prioritized first. Sim before spending major upgrade currency.</div></div><div class="card"><h2>Priority Targets</h2><div class="run"><b>1. Weapons</b><span>Aman'muso + Jaw</span></div><div class="run"><b>2. Trinkets</b><span>Ula'tek + Zul'jin</span></div><div class="run"><b>3. Neck</b><span>Aqirbane Reliquary</span></div><div class="run"><b>4. Tier</b><span>Complete/optimize 4-set</span></div></div></div><div class="card" style="margin-top:13px"><h2>Overall BiS Checklist</h2><div class="note">Patch 12.1 overall high-DPS target list. Check a piece when you have the version you consider finished.</div><div style="overflow:auto;margin-top:10px"><table><thead><tr><th>Have</th><th>Slot</th><th>Best in Slot</th><th>Source</th><th>Notes</th></tr></thead><tbody id="bisTable"></tbody></table></div></div><div class="card" style="margin-top:13px"><h2>Best Mythic+ Farms</h2><div class="run"><b>Temple of Sethraliss</b><span>Weapon + strong tier-conversion bases</span></div><div class="run"><b>Altar of Fangs</b><span>BiS ring</span></div><div class="run"><b>Voidscar Arena</b><span>Strong ring/neck/helm options</span></div><div class="run"><b>King's Rest</b><span>Strong waist + boots</span></div></div></section>
 
  <section id="train" class="tab">
   <div class="trainerHead">
@@ -197,11 +200,11 @@ const D={name:"Wrénêvër",realm:"Illidan",region:"us",spec:"Frost Death Knight
  d:[["Dungeon 1",10,260,12],["Dungeon 2",10,260,12],["Dungeon 3",9,245,11],["Dungeon 4",9,245,11],["Dungeon 5",8,230,10],["Dungeon 6",8,230,10],["Dungeon 7",10,260,12],["Dungeon 8",9,245,11]],
  runs:[],gear:[{i:"Weapon",n:"Highest-impact slot"},{i:"Trinket",n:"Compare before replacing"},{i:"Tier / Set",n:"Protect set bonus"}],checks:{},trainer:{score:0,streak:0,best:0,correct:0,total:0}};
 let S=JSON.parse(localStorage.getItem("wr3nFrostDash")||"null")||D;
-if(!S.trainer)S.trainer={score:0,streak:0,best:0,correct:0,total:0};
+if(!S.trainer)S.trainer={score:0,streak:0,best:0,correct:0,total:0};if(!S.bis)S.bis={};
 const $=id=>document.getElementById(id);
 const E=x=>String(x).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
 function save(){localStorage.setItem("wr3nFrostDash",JSON.stringify(S))}
-function tab(id,b){document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".tabbtn").forEach(x=>x.classList.remove("active"));$(id).classList.add("active");b.classList.add("active");if(id==="train")nextScenario()}
+function tab(id,b){document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".tabbtn").forEach(x=>x.classList.remove("active"));$(id).classList.add("active");b.classList.add("active");if(id==="train")nextScenario();if(id==="bis")renderBis()}
 function render(){
  $("nm").textContent=S.name;$("sub").textContent=`${S.realm} • ${S.spec} • Midnight Season 2`;$("ratingVal").textContent=S.rating;$("goalVal").textContent=S.goal;$("weeklyVal").textContent=S.weekly;
  let gap=Math.max(0,S.goal-S.rating),pct=Math.min(100,S.rating/S.goal*100);$("prog").style.width=pct+"%";$("pct").textContent=`${pct.toFixed(1)}% to ${S.goal}`;$("gap").textContent=gap?`${gap} rating to go`:"Goal reached";
@@ -212,8 +215,9 @@ function render(){
  $("runs").innerHTML="";$("noruns").style.display=S.runs.length?"none":"block";S.runs.slice().reverse().slice(0,7).forEach(r=>{let x=document.createElement("div");x.className="run";x.innerHTML=`<b>${E(r.dungeon||"Mythic+")}</b><span class="pill">+${r.level}</span><span class="${r.result==="Timed"?"good":"bad"}">${r.result}</span>`;$("runs").appendChild(x)});
  $("gear").innerHTML="";S.gear.forEach((g,i)=>{let x=document.createElement("div");x.className="gear";x.innerHTML=`<input value="${E(g.i)}" onchange="gearEdit(${i},'i',this.value)"><input value="${E(g.n)}" onchange="gearEdit(${i},'n',this.value)"><button class="iconbtn" onclick="gearDel(${i})">×</button>`;$("gear").appendChild(x)});
  document.querySelectorAll("[data-c]").forEach(x=>x.checked=!!S.checks[x.dataset.c]);renderTrainerStats();
- if(typeof renderRioMeta==="function") renderRioMeta();
+ if(typeof renderRioMeta==="function") renderRioMeta();renderBis();
 }
+const BIS=[["Head","Baleful Grave-Knight's Casque","Twin Fangs","Tier"],["Neck","Aqirbane Reliquary","Ula'tek","High-priority special-effect neck"],["Shoulders","Baleful Grave-Knight's Gibbets","Catalyst • Temple of Sethraliss","Tier"],["Cloak","Silken Voodoo Drape","Coiled Altar",""] ,["Chest","Baleful Grave-Knight's Breastplate","Catalyst • Coiled Altar","Tier"],["Bracers","Spellbreaker's Bracers","Blacksmithing","Crafted • Arcanoweave Lining"],["Hands","Baleful Grave-Knight's Deathgrips","Entombed Sentinels","Tier"],["Waist","Girdle of Toxic Regret","Coiled Altar",""] ,["Legs","Baleful Grave-Knight's Greaves","Catalyst • Ula'tek","Tier"],["Feet","Spellbreaker's March","Blacksmithing","Crafted • Arcanoweave Lining"],["Ring 1","Band of the Amani Warlord","Altar of Fangs",""] ,["Ring 2","Sickening Signet of Atroxus","Voidscar Arena",""] ,["Trinket 1","Voracious Heart of Ula'tek","Ula'tek","BiS on-use • very high priority"],["Trinket 2","Zul'jin's Guillotine Technique","Coiled Altar","BiS passive • very high priority"],["Main Hand","Aman'muso, Warlord's Vengeance","Coiled Altar","Very high priority"],["Off Hand","Jaw of the Shackled Goddess","Ula'tek","Very high priority"]];const BIS_PRIORITY=[14,15,12,13,1,0,6,2,4,5,9,7,10,11,3,8];function bisToggle(i){S.bis[i]=!S.bis[i];save();renderBis()}function renderBis(){if(!$("bisTable"))return;let have=BIS.filter((_,i)=>S.bis[i]).length;$("bisCount").textContent=`${have}/${BIS.length}`;$("bisTable").innerHTML="";BIS.forEach((x,i)=>{let tr=document.createElement("tr");tr.innerHTML=`<td><input type="checkbox" ${S.bis[i]?"checked":""} onchange="bisToggle(${i})"></td><td><b>${E(x[0])}</b></td><td class="${S.bis[i]?"good":""}">${E(x[1])}</td><td>${E(x[2])}</td><td>${E(x[3])}</td>`;$("bisTable").appendChild(tr)});let next=BIS_PRIORITY.find(i=>!S.bis[i]);$("bisNext").innerHTML=next===undefined?`<div class="good" style="font-weight:900;font-size:18px">✓ Overall list complete</div>`:`<div class="nextKeyDungeon">${E(BIS[next][1])}</div><div class="recReason"><b>${E(BIS[next][0])}</b> • ${E(BIS[next][2])}<br>${E(BIS[next][3]||"Next unchecked BiS target")}</div>`;}
 function editD(i,j,v){S.d[i][j]=j?+v:v;save();render()}function weeklyChange(){S.weekly=+$("weekly").value||0;save();render()}function goalChange(){S.goal=+$("goal").value;S.keyGoal=+$("keyGoal").value;save();render()}
 function gearEdit(i,k,v){S.gear[i][k]=v;save()}function gearDel(i){S.gear.splice(i,1);save();render()}function addGear(){S.gear.push({i:"New item",n:"Upgrade note"});save();render()}
 function checkSave(){document.querySelectorAll("[data-c]").forEach(x=>S.checks[x.dataset.c]=x.checked);save()}
