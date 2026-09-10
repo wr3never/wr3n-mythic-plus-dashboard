@@ -162,6 +162,68 @@ body{overflow-x:hidden}
 @media(max-width:1020px){:root{--sidebar:190px}.stats{grid-template-columns:repeat(2,1fr)}.farmGrid{grid-template-columns:1fr 1fr}.heroMeta{display:none}}
 @media(max-width:760px){.shellSidebar{position:sticky;top:0;width:100%;height:auto;display:block;padding:9px 10px;overflow:auto}.brandLock,.sideFoot{display:none}.sideNav{display:flex;gap:6px;overflow:auto}.sideNav .tabbtn{width:auto;white-space:nowrap;padding:9px 11px}.app{margin-left:0;padding:14px}.top{margin-top:4px}.hero{min-height:150px;padding:22px}.heroTitle{font-size:44px}.dashboardGrid,.farmGrid{grid-template-columns:1fr}}
 
+/* ===== DARKER BERRY READABILITY PASS ===== */
+:root{
+ --bg:#2f2228;
+ --p:#3b2a31;
+ --p2:#463039;
+ --line:#6b4a56;
+ --text:#fff7f8;
+ --muted:#d9c4ca;
+ --ice:#e7a3b3;
+ --ice2:#ffd9e1;
+ --good:#9fd0ad;
+ --warn:#e39a45;
+ --bad:#f08a9f;
+ --vio:#b993ad;
+ --shadow:0 12px 34px rgba(20,10,14,.28);
+}
+html{background:var(--bg)}
+body{
+ color:var(--text);
+ background:
+   radial-gradient(circle at 5% 0%,rgba(181,92,112,.18),transparent 30%),
+   radial-gradient(circle at 96% 4%,rgba(126,77,106,.20),transparent 34%),
+   linear-gradient(180deg,#3a2931 0%,#2f2228 100%);
+}
+.shellSidebar{background:rgba(47,34,40,.94);border-right:1px solid rgba(255,220,228,.09)}
+.brandTitle{color:#fff8fa}.brandTag,.sideQuote,.sideMini{color:#d5bdc5}
+.sideFoot{border-top-color:rgba(255,220,228,.08)}
+.sideNav .tabbtn{color:#eadde1}.sideNav .tabbtn:hover{background:rgba(216,147,164,.12)}
+.sideNav .tabbtn.active{background:linear-gradient(135deg,rgba(183,90,111,.34),rgba(132,84,111,.34));color:#fff3f6}
+.top h1{color:#fff8fa}.sub{color:#d5c3c9}.badge{background:rgba(216,147,164,.18);color:#ffe5eb}
+.btn{background:rgba(73,50,59,.88);border-color:rgba(255,218,226,.10);color:#fff7f8}
+.btn:hover{border-color:#e7a3b3}.btn.primary{background:linear-gradient(135deg,#9f5365,#7a4969);border-color:#b9778b}
+.rioStatus{background:#3a2931;color:#ddcbd0;border-color:#6a4a55}
+.hero{background:linear-gradient(118deg,rgba(74,43,56,.97),rgba(128,67,88,.86) 44%,rgba(166,95,48,.72)),radial-gradient(circle at 72% 15%,rgba(255,255,255,.10),transparent 30%)}
+.card{background:linear-gradient(180deg,rgba(67,46,55,.96),rgba(53,37,44,.98));border-color:#674955;box-shadow:var(--shadow)}
+.small,label.small,.note,.scenario,.recReason{color:#d9c4ca}
+.nextKey{background:radial-gradient(circle at 100% 0,rgba(216,147,164,.15),transparent 42%),linear-gradient(180deg,#513442,#392831);border-color:#795463}
+.nextKeyDungeon{color:#ffe3e9}.nextKeyLevel{color:#f0afbd}
+.rioMeta>div{background:#35262d;border-color:#624550}
+.progress{background:#2d2026;border-color:#5b424c}.progress>div{background:linear-gradient(90deg,#e5a38f,#d893a4,#b993ad)}
+table th,table td{border-bottom-color:rgba(255,223,231,.10)} th{color:#d9c4ca}
+input,select{background:#34242b;color:#fff8fa;border-color:#674955}input:focus,select:focus{border-color:#e7a3b3}
+.vault,.scorebox,.resource,.lesson,.feedback,.farmTarget{background:#38272f;border-color:#654853}
+.vault.done{background:#2d4235;border-color:#5f8d6c}
+.pill,.sourceTag{background:rgba(206,129,39,.17);border-color:rgba(227,154,69,.28);color:#ffd5a5}
+.iconbtn{background:#442d36;border-color:#6c4a56;color:#f08a9f}
+.arena{background:linear-gradient(180deg,#432d36,#302229);border-color:#684a55}
+.proc{background:#49313b;border-color:#6f4f5b;color:#f0dce2}.proc.km{border-color:#c47d90;color:#ffe8ed}.proc.rime{border-color:#9d7893;color:#ead7e6}.proc.ex{border-color:#c8816d;color:#ffe0d6}
+.ability{background:linear-gradient(180deg,#4a323c,#35252c);color:#fff;border-color:#694b56}.ability:hover{border-color:#e7a3b3}.feedback.correct{background:#314338}.feedback.wrong{background:#4b2d35}
+.priority div{border-bottom-color:rgba(255,223,231,.10)}.priority div:before{background:#653f4d;color:#ffe5eb}.kbd{background:#4a343c;color:#fff2f5;border-color:#745560}
+.modalbox{background:#3c2a32;border-color:#6b4a56}.modal{background:rgba(20,10,14,.58)}
+.stats .card:nth-child(1){background:linear-gradient(145deg,#8d5260,#5b3944)}
+.stats .card:nth-child(2){background:linear-gradient(145deg,#73536f,#4e3a4b)}
+.stats .card:nth-child(3){background:linear-gradient(145deg,#725c59,#4b3b3b)}
+.stats .card:nth-child(4){background:linear-gradient(145deg,#a2642b,#6c4324)}
+.stats .card .small,.stats .card .note,.stats .card .val{color:#fff8fa !important}
+#bis .card:first-child,.farmHero{background:linear-gradient(145deg,#594052,#3e2d36)}
+#bis table tbody tr:hover,.farmTable tr:hover{background:rgba(216,147,164,.07)}
+.yadenCard{min-height:55vh;display:grid;place-items:center;text-align:center;background:radial-gradient(circle at 50% 35%,rgba(216,147,164,.22),transparent 34%),linear-gradient(145deg,#5a3d49,#37272e)}
+.yadenMsg{font-size:clamp(54px,10vw,120px);font-weight:750;letter-spacing:-.06em;color:#fff6f8;text-shadow:0 12px 35px rgba(0,0,0,.22)}
+.yadenHeart{font-size:clamp(32px,6vw,72px);margin-bottom:10px;color:#f0a4b6}
+
 </style>
 </head>
 <body>
@@ -172,6 +234,7 @@ body{overflow-x:hidden}
   <button class="btn tabbtn" onclick="tab('bis',this)"><span class="navIcon">◇</span>Best in Slot</button>
   <button class="btn tabbtn" onclick="tab('farm',this)"><span class="navIcon">✦</span>What to Farm</button>
   <button class="btn tabbtn" onclick="tab('train',this)"><span class="navIcon">⚔</span>Rotation Trainer</button>
+  <button class="btn tabbtn" onclick="tab('yaden',this)"><span class="navIcon">♡</span>Yaden</button>
  </nav>
  <div class="sideFoot"><div class="sideQuote">Good players chase gear. Better players chase better decisions.</div><div class="sideMini">Wr3n Mythic+ • Frost DK</div></div>
 </aside>
@@ -190,6 +253,7 @@ body{overflow-x:hidden}
   <button class="btn tabbtn active" onclick="tab('dash',this)">📊 Dashboard</button>
   <button class="btn tabbtn" onclick="tab('bis',this)">🛡 Best in Slot</button>
   <button class="btn tabbtn" onclick="tab('train',this)">⚔ Top-DPS Rotation Trainer</button>
+  <button class="btn tabbtn" onclick="tab('yaden',this)">♡ Yaden</button>
  </div>
 
  <section id="dash" class="tab active">
@@ -268,6 +332,15 @@ body{overflow-x:hidden}
    <div class="featureHeader"><h2 class="sectionTitle">Full farm plan</h2><button class="textLink" onclick="tab('bis',document.querySelector('.sideNav .tabbtn:nth-child(2)'))">Open BiS tracker →</button></div>
    <div class="note">Missing targets are ordered by your BiS priority. Equipped exact matches are automatically removed from the list after Raider.IO sync.</div>
    <div style="overflow:auto"><table class="farmTable"><thead><tr><th>Priority</th><th>Slot</th><th>Target</th><th>Source</th><th>Why</th></tr></thead><tbody id="farmTable"></tbody></table></div>
+  </div>
+ </section>
+
+ <section id="yaden" class="tab">
+  <div class="card yadenCard">
+   <div>
+    <div class="yadenHeart">♡</div>
+    <div class="yadenMsg">ILY JADEN</div>
+   </div>
   </div>
  </section>
 
