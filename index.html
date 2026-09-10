@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07101a">
+<title>Wr3n Frost DK — Mythic+ Command Center</title>
+<style>
+:root{
+ --bg:#050a11;--p:#0d1725;--p2:#101e31;--line:#263c59;--text:#edf8ff;--muted:#90a7bf;
+ --ice:#78ddff;--ice2:#d0f6ff;--good:#61dfa0;--warn:#ffd36a;--bad:#ff7385;--vio:#a98cff
+}
+*{box-sizing:border-box} html{background:var(--bg)} body{margin:0;color:var(--text);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+background:radial-gradient(circle at 8% 0%,rgba(120,221,255,.12),transparent 27%),radial-gradient(circle at 90% 10%,rgba(169,140,255,.08),transparent 25%),var(--bg)}
+button,input,select{font:inherit}.app{max-width:1180px;margin:auto;padding:14px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+h1{margin:0;font-size:clamp(26px,4vw,42px);letter-spacing:-1px}.sub{color:var(--muted);margin-top:4px;font-size:13px}
+.badge{display:inline-block;font-size:10px;letter-spacing:.08em;padding:5px 8px;border:1px solid #376077;border-radius:999px;color:var(--ice2);vertical-align:middle}
+.btn{border:1px solid var(--line);background:#111d2e;color:var(--text);padding:10px 13px;border-radius:10px;font-weight:850;cursor:pointer}
+.btn:hover{border-color:var(--ice)}.btn.primary{background:linear-gradient(135deg,#153a58,#245a79);border-color:#4182a5}
+.tabs{display:flex;gap:8px;overflow:auto;margin:17px 0}.tabbtn{white-space:nowrap}.tabbtn.active{border-color:var(--ice);color:var(--ice2);box-shadow:0 0 0 2px rgba(120,221,255,.07) inset}
+.tab{display:none}.tab.active{display:block}
+.grid{display:grid;gap:13px}.stats{grid-template-columns:repeat(4,1fr)}.two{grid-template-columns:1.25fr .75fr}
+.card{background:linear-gradient(180deg,rgba(16,30,49,.97),rgba(10,17,29,.98));border:1px solid var(--line);border-radius:16px;padding:15px;box-shadow:0 12px 28px rgba(0,0,0,.25)}
+.small,label.small{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}.val{font-size:30px;font-weight:950;margin-top:5px}
+.ice{color:var(--ice)}.good{color:var(--good)}.warn{color:var(--warn)}.bad{color:var(--bad)}
+h2{font-size:17px;margin:0 0 10px}h3{font-size:14px;margin:0 0 6px}.note{font-size:12px;color:var(--muted);margin:-4px 0 11px}
+.progress{height:9px;border-radius:999px;background:#07101b;border:1px solid #20344d;overflow:hidden;margin-top:9px}.progress>div{height:100%;background:linear-gradient(90deg,var(--ice),var(--vio))}
+table{width:100%;border-collapse:collapse}th,td{padding:8px 6px;border-bottom:1px solid rgba(38,60,89,.75);font-size:13px;text-align:left}th{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
+input,select{width:100%;background:#08111d;color:var(--text);border:1px solid #2a4260;border-radius:9px;padding:8px;outline:none}input:focus,select:focus{border-color:var(--ice)}
+.vaults{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.vault{padding:11px;border:1px solid var(--line);border-radius:11px;background:#081321}.vault.done{border-color:#2e8462;background:#0a2119}
+.pill{display:inline-block;padding:4px 7px;border-radius:999px;background:#092035;border:1px solid #2d5d79;color:#c6f3ff;font-size:11px}
+.rioBar{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:14px 0 0}
+.rioStatus{display:inline-flex;align-items:center;gap:6px;padding:7px 9px;border:1px solid var(--line);border-radius:999px;background:#081321;color:var(--muted);font-size:11px}
+.rioDot{width:8px;height:8px;border-radius:50%;background:#64748b}.rioStatus.live .rioDot{background:var(--good);box-shadow:0 0 8px rgba(97,223,160,.5)}.rioStatus.err .rioDot{background:var(--bad)}
+.nextKey{background:radial-gradient(circle at 100% 0,rgba(120,221,255,.17),transparent 42%),linear-gradient(180deg,#102338,#08131f);border-color:#356887}
+.nextKeyMain{display:flex;justify-content:space-between;gap:14px;align-items:center;flex-wrap:wrap}
+.nextKeyDungeon{font-size:25px;font-weight:950;color:var(--ice2);letter-spacing:-.5px}
+.nextKeyLevel{font-size:42px;font-weight:1000;color:var(--ice);line-height:1}
+.recReason{margin-top:7px;color:var(--muted);font-size:12px;max-width:680px}
+.rioMeta{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}.rioMeta>div{background:#07101b;border:1px solid var(--line);padding:9px;border-radius:10px}.rioMeta b{display:block;font-size:16px;margin-top:2px}
+@media(max-width:650px){.rioMeta{grid-template-columns:1fr 1fr}}.run{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;padding:9px 0;border-bottom:1px solid rgba(38,60,89,.7)}
+.gear{display:grid;grid-template-columns:1fr 1.3fr 40px;gap:7px;margin-bottom:7px}.iconbtn{width:38px;height:38px;border:1px solid var(--line);border-radius:9px;background:#111d2e;color:var(--bad);cursor:pointer}
+.check{display:flex;align-items:center;gap:8px;margin:9px 0}.check input{width:auto}.footer{text-align:center;color:var(--muted);font-size:11px;padding:18px 0}
+
+/* trainer */
+.trainerHead{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:12px}
+.arena{background:radial-gradient(circle at 50% 12%,rgba(120,221,255,.13),transparent 23%),linear-gradient(180deg,#0d1929,#07101b);border:1px solid #2d4868;border-radius:18px;padding:15px;min-height:520px}
+.scoreline{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.scorebox{text-align:center;background:#081321;border:1px solid var(--line);border-radius:10px;padding:8px}.scorebox b{display:block;font-size:20px}
+.enemy{text-align:center;margin:14px 0 11px}.enemyIcon{font-size:54px;filter:drop-shadow(0 0 14px rgba(120,221,255,.18))}.enemyName{font-weight:950;font-size:18px}.scenario{font-size:12px;color:var(--muted);margin-top:4px}
+.resources{display:grid;grid-template-columns:repeat(6,1fr);gap:7px}.resource{text-align:center;background:#081321;border:1px solid var(--line);border-radius:10px;padding:8px}.resource b{display:block;font-size:17px;margin-top:2px}
+.procs{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;min-height:31px;margin:10px 0}.proc{font-size:10px;font-weight:900;padding:6px 8px;border-radius:999px;border:1px solid #455b77;background:#132139}.proc.km{border-color:#6edcff;color:#c8f5ff}.proc.rime{border-color:#9aa8ff;color:#e1e4ff}.proc.ex{border-color:#ff9a7b;color:#ffd6cb}
+.abilities{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.ability{position:relative;min-height:74px;border:1px solid #304966;border-radius:12px;background:linear-gradient(180deg,#14243a,#0b1626);color:#fff;padding:8px 5px;font-weight:850;cursor:pointer}
+.ability:hover{border-color:var(--ice);transform:translateY(-1px)}.ability .ico{font-size:22px;display:block}.ability .key{position:absolute;top:5px;right:6px;color:var(--muted);font-size:9px}.ability.cooldown{opacity:.42}.ability.recommended{box-shadow:0 0 0 2px rgba(120,221,255,.15) inset}
+.feedback{margin-top:12px;padding:11px;border:1px solid var(--line);border-radius:11px;background:#07101b;min-height:74px}.feedback.correct{border-color:#31845f}.feedback.wrong{border-color:#964351}
+.learn{display:grid;grid-template-columns:1fr 1fr;gap:8px}.lesson{background:#081321;border:1px solid var(--line);border-radius:11px;padding:10px}
+.priority{counter-reset:p}.priority div{display:flex;gap:8px;align-items:flex-start;padding:6px 0;border-bottom:1px solid rgba(38,60,89,.55)}.priority div:before{counter-increment:p;content:counter(p);display:inline-grid;place-items:center;min-width:22px;height:22px;border-radius:50%;background:#10263b;border:1px solid #2e5873;color:var(--ice2);font-size:10px;font-weight:900}
+.kbd{padding:2px 5px;border:1px solid #3c506a;border-bottom-width:2px;border-radius:5px;background:#111d2e;color:#d9f4ff;font-size:10px}
+.modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:14px;background:rgba(0,0,0,.72);z-index:20}.modal.open{display:flex}.modalbox{width:100%;max-width:520px;background:#0d1725;border:1px solid var(--line);border-radius:15px;padding:16px}.modalgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+@media(max-width:850px){.stats{grid-template-columns:1fr 1fr}.two{grid-template-columns:1fr}.trainerHead{grid-template-columns:1fr 1fr}.abilities{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:560px){.app{padding:10px}.val{font-size:25px}.trainerHead,.learn{grid-template-columns:1fr 1fr}.abilities{grid-template-columns:repeat(2,1fr)}.resources{grid-template-columns:repeat(3,1fr)}.modalgrid{grid-template-columns:1fr}.vaults{grid-template-columns:1fr 1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+ <div class="top">
+  <div><h1>❄ <span id="nm">Wr3n</span> Mythic+ <span class="badge">FROST DK</span></h1><div class="sub" id="sub">Illidan • Frost Death Knight • Midnight Season 2</div></div>
+  <button class="btn" onclick="openSettings()">⚙ Character</button>
+ </div>
+ <div class="rioBar">
+   <button class="btn primary" id="rioRefresh" onclick="refreshRaiderIO(true)">↻ Refresh Raider.IO</button>
+   <span class="rioStatus" id="rioStatus"><span class="rioDot"></span><span id="rioStatusText">Not synced yet</span></span>
+   <a class="btn" id="rioProfileLink" href="https://raider.io/characters/us/illidan/Wr%C3%A9n%C3%AAv%C3%ABr" target="_blank" rel="noopener" style="text-decoration:none">View Raider.IO ↗</a>
+ </div>
+
+ <div class="tabs">
+  <button class="btn tabbtn active" onclick="tab('dash',this)">📊 Dashboard</button>
+  <button class="btn tabbtn" onclick="tab('train',this)">⚔ Top-DPS Rotation Trainer</button>
+ </div>
+
+ <section id="dash" class="tab active">
+  <div class="card nextKey" style="margin-bottom:13px">
+    <div class="small">Raider.IO Smart Recommendation</div>
+    <div class="nextKeyMain">
+      <div>
+        <div class="nextKeyDungeon" id="recDungeon">Sync Raider.IO to calculate</div>
+        <div class="recReason" id="recReason">I’ll look at the best run contributing to each dungeon and prioritize your weakest score opportunity.</div>
+      </div>
+      <div style="text-align:right">
+        <div class="small">BEST NEXT KEY</div>
+        <div class="nextKeyLevel" id="recLevel">—</div>
+      </div>
+    </div>
+    <div class="rioMeta">
+      <div><span class="small">Live Rating</span><b id="rioRating">—</b></div>
+      <div><span class="small">Equipped iLvl</span><b id="rioIlvl">—</b></div>
+      <div><span class="small">World Rank</span><b id="rioWorldRank">—</b></div>
+      <div><span class="small">Region Rank</span><b id="rioRegionRank">—</b></div>
+    </div>
+  </div>
+  <div class="grid stats">
+   <div class="card"><div class="small">Mythic+ Rating</div><div class="val ice" id="ratingVal">2065</div><div class="progress"><div id="prog"></div></div><div class="note" id="pct" style="margin:7px 0 0"></div></div>
+   <div class="card"><div class="small">Best Timed Key</div><div class="val" id="bestKey">+10</div><div class="note" style="margin:7px 0 0">your best logged / entered run</div></div>
+   <div class="card"><div class="small">Vault Runs</div><div class="val good" id="weeklyVal">0</div><div class="note" style="margin:7px 0 0">this week</div></div>
+   <div class="card"><div class="small">Rating Goal</div><div class="val warn" id="goalVal">2500</div><div class="note" id="gap" style="margin:7px 0 0"></div></div>
+  </div>
+
+  <div class="grid two" style="margin-top:13px">
+   <div class="card"><h2>Dungeon Scoreboard</h2><div class="note">Rename these to the current dungeon pool and enter your best results.</div><div style="overflow:auto"><table><thead><tr><th>Dungeon</th><th>Best</th><th>Score</th><th>Target</th><th>Gap</th></tr></thead><tbody id="dungeons"></tbody></table></div></div>
+   <div class="card"><h2>Great Vault</h2><div class="note">1 / 4 / 8 Mythic+ run thresholds.</div><div class="vaults">
+    <div class="vault" id="v1"><div class="small">Slot 1</div><b>1 run</b><div id="v1t">Incomplete</div></div>
+    <div class="vault" id="v4"><div class="small">Slot 2</div><b>4 runs</b><div id="v4t">Incomplete</div></div>
+    <div class="vault" id="v8"><div class="small">Slot 3</div><b>8 runs</b><div id="v8t">Incomplete</div></div>
+   </div><div style="margin-top:11px"><label class="small">Runs this week</label><input id="weekly" type="number" min="0" value="0" oninput="weeklyChange()"></div><button class="btn primary" style="width:100%;margin-top:9px" onclick="openRun()">+ Log Run</button></div>
+  </div>
+
+  <div class="grid two" style="margin-top:13px">
+   <div class="card"><h2>Recent Runs</h2><div id="runs"></div><div class="note" id="noruns">No runs logged yet.</div></div>
+   <div class="card"><h2>Push Goals</h2><label class="small">Rating goal <span class="pill" id="gp"></span></label><input id="goal" type="range" min="2000" max="3500" step="50" oninput="goalChange()"><div style="height:10px"></div><label class="small">Key goal <span class="pill" id="kg"></span></label><input id="keyGoal" type="range" min="5" max="20" oninput="goalChange()"></div>
+  </div>
+
+  <div class="grid two" style="margin-top:13px">
+   <div class="card"><h2>Gear Upgrade Priority</h2><div id="gear"></div><button class="btn" onclick="addGear()">+ Add Item</button></div>
+   <div class="card"><h2>Key Prep</h2>
+    <label class="check"><input type="checkbox" data-c="ench" onchange="checkSave()"> Weapon runeforges ready</label>
+    <label class="check"><input type="checkbox" data-c="con" onchange="checkSave()"> Food / flask / pots ready</label>
+    <label class="check"><input type="checkbox" data-c="int" onchange="checkSave()"> Mind Freeze / stops bound</label>
+    <label class="check"><input type="checkbox" data-c="route" onchange="checkSave()"> Route reviewed</label>
+    <label class="check"><input type="checkbox" data-c="gear" onchange="checkSave()"> New gear compared / simmed</label>
+   </div>
+  </div>
+ </section>
+
+ <section id="train" class="tab">
+  <div class="trainerHead">
+   <div class="card"><label class="small">Build</label><select id="build" onchange="resetScenario()"><option selected>Deathbringer + Breath</option><option>Deathbringer + Frostbane</option></select></div>
+   <div class="card"><label class="small">Situation</label><select id="mode" onchange="resetScenario()"><option selected>Mixed Mythic+</option><option>Single Target</option><option>2 Target Cleave</option><option>3+ Target AoE</option></select></div>
+   <div class="card"><label class="small">Training</label><select id="difficulty" onchange="resetScenario()"><option>Learning</option><option selected>Normal</option><option>Expert</option></select></div>
+   <div class="card"><div class="small">Spellbook Profile</div><div style="margin-top:7px;font-weight:900">Your uploaded Frost spellbook</div><div class="note" style="margin:5px 0 0">Deathbringer • Reaper's Mark • Breath • Frostscythe • Glacial Advance</div></div>
+  </div>
+
+  <div class="grid two">
+   <div class="arena">
+    <div class="scoreline">
+     <div class="scorebox"><span class="small">Score</span><b id="score">0</b></div>
+     <div class="scorebox"><span class="small">Streak</span><b id="streak">0</b></div>
+     <div class="scorebox"><span class="small">Accuracy</span><b id="acc">—</b></div>
+     <div class="scorebox"><span class="small">Best</span><b id="best">0</b></div>
+    </div>
+
+    <div class="enemy"><div class="enemyIcon">💀</div><div class="enemyName" id="enemy">Mythic+ Training Pack</div><div class="scenario" id="scen">Choose the highest-DPS next global.</div></div>
+
+    <div class="resources">
+     <div class="resource"><span class="small">Targets</span><b id="targets">1</b></div>
+     <div class="resource"><span class="small">Runes</span><b id="runes">4</b></div>
+     <div class="resource"><span class="small">Runic Power</span><b id="rp">60</b></div>
+     <div class="resource"><span class="small">KM stacks</span><b id="km">1</b></div>
+     <div class="resource"><span class="small">Rime</span><b id="rime">Yes</b></div>
+     <div class="resource"><span class="small">ERW charges</span><b id="erw">1</b></div>
+    </div>
+    <div class="procs" id="procs"></div>
+    <div class="abilities" id="abilities"></div>
+    <div class="feedback" id="fb"><b>Top-DPS mode.</b><br><span class="scenario">The answer is chosen from the current 12.1 priority system and your shown Deathbringer spellbook.</span></div>
+   </div>
+
+   <div class="card">
+    <h2>Deathbringer M+ Priority</h2>
+    <div class="note">The game evaluates this priority every question. It is not a fixed rotation.</div>
+    <div class="priority" id="priority"></div>
+    <div style="margin-top:12px" class="lesson">
+     <h3>Target-count swaps</h3>
+     <div class="scenario">For this trainer: <b>Obliterate</b> is your KM spender in single target. In AoE, it swaps to <b>Frostscythe</b>; your RP spender swaps from <b>Frost Strike</b> to <b>Glacial Advance</b>. The exact crossover can move with talents/tuning, so the mode is editable rather than hard-wired to a single encounter.</div>
+    </div>
+    <div style="margin-top:9px" class="lesson">
+     <h3>Keyboard</h3><div class="scenario">Press <span class="kbd">1</span>–<span class="kbd">0</span> to answer. Learning mode highlights the recommended button; Expert removes most hints.</div>
+    </div>
+    <button class="btn" style="width:100%;margin-top:10px" onclick="nextScenario()">New Scenario</button>
+    <button class="btn" style="width:100%;margin-top:7px" onclick="resetTrainer()">Reset Score</button>
+   </div>
+  </div>
+ </section>
+
+ <div class="footer">Built for Wrénêvër–Illidan. Live character data uses Raider.IO’s public API; Raider.IO attribution links are included above. Rotation training and cached dashboard data save locally in your browser.</div>
+</div>
+
+<div class="modal" id="runModal"><div class="modalbox"><h2>Log Mythic+ Run</h2><div class="modalgrid">
+ <div><label class="small">Dungeon</label><input id="runDungeon" placeholder="Dungeon"></div><div><label class="small">Key</label><input id="runLevel" type="number" min="2" value="10"></div>
+ <div><label class="small">Result</label><select id="runResult"><option>Timed</option><option>Depleted</option></select></div><div><label class="small">Rating after</label><input id="runRating" type="number" value="2065"></div>
+</div><div style="display:flex;gap:7px;justify-content:flex-end;margin-top:12px"><button class="btn" onclick="closeM('runModal')">Cancel</button><button class="btn primary" onclick="saveRun()">Save</button></div></div></div>
+
+<div class="modal" id="settingsModal"><div class="modalbox"><h2>Character</h2><div class="modalgrid">
+ <div><label class="small">Name</label><input id="charName"></div><div><label class="small">Realm</label><input id="realm"></div><div><label class="small">Region</label><select id="region"><option value="us">US</option><option value="eu">EU</option><option value="kr">KR</option><option value="tw">TW</option><option value="cn">CN</option></select></div><div><label class="small">Rating</label><input id="currentRating" type="number"></div><div><label class="small">Spec</label><input id="spec"></div>
+</div><div style="display:flex;gap:7px;justify-content:flex-end;margin-top:12px"><button class="btn" onclick="closeM('settingsModal')">Cancel</button><button class="btn primary" onclick="saveSettings()">Save</button></div></div></div>
+
+<script>
+const D={name:"Wrénêvër",realm:"Illidan",region:"us",spec:"Frost Death Knight",rating:2065,goal:2500,keyGoal:12,weekly:0,
+ d:[["Dungeon 1",10,260,12],["Dungeon 2",10,260,12],["Dungeon 3",9,245,11],["Dungeon 4",9,245,11],["Dungeon 5",8,230,10],["Dungeon 6",8,230,10],["Dungeon 7",10,260,12],["Dungeon 8",9,245,11]],
+ runs:[],gear:[{i:"Weapon",n:"Highest-impact slot"},{i:"Trinket",n:"Compare before replacing"},{i:"Tier / Set",n:"Protect set bonus"}],checks:{},trainer:{score:0,streak:0,best:0,correct:0,total:0}};
+let S=JSON.parse(localStorage.getItem("wr3nFrostDash")||"null")||D;
+if(!S.trainer)S.trainer={score:0,streak:0,best:0,correct:0,total:0};
+const $=id=>document.getElementById(id);
+const E=x=>String(x).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+function save(){localStorage.setItem("wr3nFrostDash",JSON.stringify(S))}
+function tab(id,b){document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".tabbtn").forEach(x=>x.classList.remove("active"));$(id).classList.add("active");b.classList.add("active");if(id==="train")nextScenario()}
+function render(){
+ $("nm").textContent=S.name;$("sub").textContent=`${S.realm} • ${S.spec} • Midnight Season 2`;$("ratingVal").textContent=S.rating;$("goalVal").textContent=S.goal;$("weeklyVal").textContent=S.weekly;
+ let gap=Math.max(0,S.goal-S.rating),pct=Math.min(100,S.rating/S.goal*100);$("prog").style.width=pct+"%";$("pct").textContent=`${pct.toFixed(1)}% to ${S.goal}`;$("gap").textContent=gap?`${gap} rating to go`:"Goal reached";
+ $("goal").value=S.goal;$("keyGoal").value=S.keyGoal;$("gp").textContent=S.goal;$("kg").textContent="+"+S.keyGoal;$("weekly").value=S.weekly;
+ let best=0;S.runs.forEach(r=>{if(r.result==="Timed")best=Math.max(best,+r.level)});if(!best)best=Math.max(...S.d.map(x=>+x[1]||0));$("bestKey").textContent="+"+best;
+ $("dungeons").innerHTML="";S.d.forEach((d,i)=>{let g=Math.max(0,(+d[3]||0)-(+d[1]||0)),tr=document.createElement("tr");tr.innerHTML=`<td><input value="${E(d[0])}" onchange="editD(${i},0,this.value)"></td><td><input type="number" value="${d[1]}" onchange="editD(${i},1,this.value)"></td><td><input type="number" value="${d[2]}" onchange="editD(${i},2,this.value)"></td><td><input type="number" value="${d[3]}" onchange="editD(${i},3,this.value)"></td><td class="${g?"warn":"good"}">${g?"+"+g:"Ready"}</td>`;$("dungeons").appendChild(tr)});
+ [1,4,8].forEach(n=>{let v=$("v"+n),t=$("v"+n+"t");if(S.weekly>=n){v.classList.add("done");t.textContent="Unlocked ✓"}else{v.classList.remove("done");t.textContent=(n-S.weekly)+" to go"}});
+ $("runs").innerHTML="";$("noruns").style.display=S.runs.length?"none":"block";S.runs.slice().reverse().slice(0,7).forEach(r=>{let x=document.createElement("div");x.className="run";x.innerHTML=`<b>${E(r.dungeon||"Mythic+")}</b><span class="pill">+${r.level}</span><span class="${r.result==="Timed"?"good":"bad"}">${r.result}</span>`;$("runs").appendChild(x)});
+ $("gear").innerHTML="";S.gear.forEach((g,i)=>{let x=document.createElement("div");x.className="gear";x.innerHTML=`<input value="${E(g.i)}" onchange="gearEdit(${i},'i',this.value)"><input value="${E(g.n)}" onchange="gearEdit(${i},'n',this.value)"><button class="iconbtn" onclick="gearDel(${i})">×</button>`;$("gear").appendChild(x)});
+ document.querySelectorAll("[data-c]").forEach(x=>x.checked=!!S.checks[x.dataset.c]);renderTrainerStats();
+ if(typeof renderRioMeta==="function") renderRioMeta();
+}
+function editD(i,j,v){S.d[i][j]=j?+v:v;save();render()}function weeklyChange(){S.weekly=+$("weekly").value||0;save();render()}function goalChange(){S.goal=+$("goal").value;S.keyGoal=+$("keyGoal").value;save();render()}
+function gearEdit(i,k,v){S.gear[i][k]=v;save()}function gearDel(i){S.gear.splice(i,1);save();render()}function addGear(){S.gear.push({i:"New item",n:"Upgrade note"});save();render()}
+function checkSave(){document.querySelectorAll("[data-c]").forEach(x=>S.checks[x.dataset.c]=x.checked);save()}
+function openRun(){$("runRating").value=S.rating;$("runModal").classList.add("open")}function closeM(id){$(id).classList.remove("open")}
+function saveRun(){let r={dungeon:$("runDungeon").value||"Mythic+",level:+$("runLevel").value||2,result:$("runResult").value,rating:+$("runRating").value||S.rating};S.runs.push(r);S.rating=r.rating;S.weekly++;save();closeM("runModal");render()}
+function openSettings(){$("charName").value=S.name;$("realm").value=S.realm;$("region").value=S.region||"us";$("currentRating").value=S.rating;$("spec").value=S.spec;$("settingsModal").classList.add("open")}
+function saveSettings(){S.name=$("charName").value||"Wrénêvër";S.realm=$("realm").value||"Illidan";S.region=$("region").value||"us";S.rating=+$("currentRating").value||0;S.spec=$("spec").value||"Frost Death Knight";$("rioProfileLink").href=`https://raider.io/characters/${encodeURIComponent(S.region)}/${encodeURIComponent(S.realm)}/${encodeURIComponent(S.name)}`;save();closeM("settingsModal");render();refreshRaiderIO(true)}
+
+
+/* ===== RAIDER.IO LIVE DATA ===== */
+const RIO_ENDPOINT="/api/raider";
+function rioName(){ return S.name==="Wr3n" ? "Wrénêvër" : S.name; }
+function rioUrl(){
+  const fields=[
+    "gear",
+    "talents",
+    "mythic_plus_scores_by_season:current",
+    "mythic_plus_best_runs",
+    "mythic_plus_recent_runs",
+    "mythic_plus_ranks",
+    "mythic_plus_weekly_highest_level_runs"
+  ].join(",");
+  return `${RIO_ENDPOINT}?region=${encodeURIComponent(S.region||"us")}&realm=${encodeURIComponent(S.realm||"illidan")}&name=${encodeURIComponent(rioName())}&fields=${encodeURIComponent(fields)}`;
+}
+function setRioStatus(kind,text){
+  const el=$("rioStatus"); el.className="rioStatus"+(kind?" "+kind:"");
+  $("rioStatusText").textContent=text;
+}
+function shortRank(v){ if(v===null||v===undefined||!Number.isFinite(+v)) return "—"; return "#"+Number(v).toLocaleString(); }
+function runScore(r){ return +(r?.score ?? r?.score_adj ?? r?.mythic_plus_score ?? 0); }
+function runLevel(r){ return +(r?.mythic_level ?? r?.level ?? 0); }
+function runDungeon(r){ return r?.dungeon ?? r?.short_name ?? r?.dungeon_name ?? "Unknown Dungeon"; }
+function runTimed(r){ return (r?.num_keystone_upgrades ?? 0)>0 || r?.is_completed_within_time===true; }
+
+function makeBestNextKey(bestRuns){
+  if(!Array.isArray(bestRuns)||!bestRuns.length){
+    $("recDungeon").textContent="No best-run data returned";
+    $("recLevel").textContent="—";
+    $("recReason").textContent="Raider.IO synced, but it did not return dungeon best runs for this character/season.";
+    return;
+  }
+  // One contributing best run per dungeon is expected. If duplicates appear, keep the highest score.
+  const byDungeon={};
+  bestRuns.forEach(r=>{
+    const d=runDungeon(r), sc=runScore(r);
+    if(!byDungeon[d] || sc>runScore(byDungeon[d])) byDungeon[d]=r;
+  });
+  const runs=Object.values(byDungeon).sort((a,b)=>runScore(a)-runScore(b));
+  const weak=runs[0];
+  const lvl=runLevel(weak);
+  const target=Math.max(lvl+1,2);
+  $("recDungeon").textContent=runDungeon(weak);
+  $("recLevel").textContent="+"+target;
+  const timed=runTimed(weak);
+  $("recReason").textContent=
+    `Your lowest current best-run score is ${runScore(weak).toFixed(1)} in ${runDungeon(weak)} at +${lvl}. `+
+    `A +${target} there is the cleanest first score-upgrade target${timed?" once you can time it":"; timing it would also improve this slot"}. `+
+    `This is a priority recommendation, not a guaranteed score-gain estimate.`;
+}
+
+function syncDungeonTable(bestRuns){
+  if(!Array.isArray(bestRuns)||!bestRuns.length) return;
+  const rows={};
+  bestRuns.forEach(r=>{
+    const d=runDungeon(r), sc=runScore(r);
+    if(!rows[d] || sc>runScore(rows[d])) rows[d]=r;
+  });
+  const arr=Object.values(rows).sort((a,b)=>runScore(b)-runScore(a));
+  S.d=arr.map(r=>{
+    const lvl=runLevel(r), sc=Math.round(runScore(r)*10)/10;
+    return [runDungeon(r),lvl,sc,Math.max(lvl+1,S.keyGoal||lvl+1)];
+  });
+}
+function syncRecentRuns(recent){
+  if(!Array.isArray(recent)) return;
+  S.runs=recent.slice(0,12).map(r=>({
+    dungeon:runDungeon(r),
+    level:runLevel(r),
+    result:runTimed(r)?"Timed":"Depleted",
+    rating:S.rating,
+    score:runScore(r),
+    completed_at:r.completed_at||null
+  }));
+}
+function applyRio(data){
+  if(!data||data.error) throw new Error(data?.message||data?.error||"Raider.IO returned no profile.");
+  S.name=data.name||S.name; S.realm=data.realm||S.realm; S.spec=data.active_spec_name?`${data.active_spec_name} ${data.class||"Death Knight"}`:S.spec;
+  S.region=data.region||S.region||"us";
+  const scoreObj=data.mythic_plus_scores_by_season?.[0]?.scores;
+  const liveScore=+(scoreObj?.all ?? 0);
+  if(liveScore) S.rating=Math.round(liveScore*10)/10;
+  const gear=data.gear||{};
+  S.rio=S.rio||{};
+  S.rio.lastSync=new Date().toISOString();
+  S.rio.profileUrl=data.profile_url||$("rioProfileLink").href;
+  S.rio.ilvl=gear.item_level_equipped ?? gear.item_level ?? null;
+  S.rio.ranks=data.mythic_plus_ranks||{};
+  S.rio.rawScore=liveScore||null;
+  syncDungeonTable(data.mythic_plus_best_runs);
+  syncRecentRuns(data.mythic_plus_recent_runs);
+  makeBestNextKey(data.mythic_plus_best_runs);
+  save(); render(); renderRioMeta();
+}
+function renderRioMeta(){
+  const r=S.rio||{};
+  $("rioRating").textContent=S.rating?Number(S.rating).toLocaleString():"—";
+  $("rioIlvl").textContent=r.ilvl??"—";
+  const all=r.ranks?.overall||r.ranks?.class||{};
+  $("rioWorldRank").textContent=shortRank(all.world);
+  $("rioRegionRank").textContent=shortRank(all.region);
+  if(r.profileUrl) $("rioProfileLink").href=r.profileUrl;
+  if(r.lastSync){
+    const t=new Date(r.lastSync);
+    setRioStatus("live","Synced "+t.toLocaleString([], {month:"short",day:"numeric",hour:"numeric",minute:"2-digit"}));
+  }
+  // Restore a recommendation from cached dungeon rows when opening offline.
+  if(S.d?.length && (!$("recLevel").textContent || $("recLevel").textContent==="—")){
+    const weak=S.d.slice().sort((a,b)=>(+a[2]||0)-(+b[2]||0))[0];
+    if(weak){
+      $("recDungeon").textContent=weak[0];
+      $("recLevel").textContent="+"+Math.max((+weak[1]||0)+1,2);
+      $("recReason").textContent=`Cached recommendation: ${weak[0]} is currently your lowest stored dungeon score (${weak[2]}). Refresh Raider.IO for the latest runs.`;
+    }
+  }
+}
+async function refreshRaiderIO(userInitiated=false){
+  const btn=$("rioRefresh"); btn.disabled=true; btn.textContent="↻ Syncing…"; setRioStatus("","Contacting Raider.IO…");
+  try{
+    const res=await fetch(rioUrl(),{headers:{"Accept":"application/json"},cache:"no-store"});
+    if(!res.ok){
+      const retry=res.headers.get("Retry-After");
+      if(res.status===429) throw new Error(`Rate limited by Raider.IO${retry?`; try again in ${retry}s`:""}.`);
+      throw new Error(`Raider.IO HTTP ${res.status}`);
+    }
+    const data=await res.json();
+    applyRio(data);
+    setRioStatus("live","Raider.IO live");
+  }catch(err){
+    console.error(err);
+    setRioStatus("err","Sync failed — using saved data");
+    $("recReason").textContent=(S.rio?.lastSync?"Using your last successful Raider.IO sync. ":"")+
+      `Live fetch failed: ${err.message}. You can retry with Refresh Raider.IO.`;
+  }finally{
+    btn.disabled=false; btn.textContent="↻ Refresh Raider.IO";
+  }
+}
+
+/* ===== ROTATION TRAINER =====
+   Priority modeled from current 12.1 guide concepts:
+   Deathbringer Breath:
+   ERW @2 charges > Reaper's Mark > Pillar > Breath > Frostwyrm's Fury >
+   KM spender (2 KM / Exterminate) > Rime HB > RP cap dump > KM spender >
+   ERW to generate KM > regular RP spender > rune spender > HB filler.
+*/
+const AB=[
+ {id:"erw",name:"Empower Rune Weapon",ico:"⚡"},
+ {id:"mark",name:"Reaper's Mark",ico:"☠️"},
+ {id:"pillar",name:"Pillar of Frost",ico:"🧊"},
+ {id:"breath",name:"Breath of Sindragosa",ico:"🐉"},
+ {id:"fury",name:"Frostwyrm's Fury",ico:"🌨️"},
+ {id:"obl",name:"Obliterate",ico:"⚔️"},
+ {id:"scythe",name:"Frostscythe",ico:"🌙"},
+ {id:"hb",name:"Howling Blast",ico:"❄️"},
+ {id:"fs",name:"Frost Strike",ico:"🗡️"},
+ {id:"ga",name:"Glacial Advance",ico:"🧊"}
+];
+let Q=null,locked=false;
+
+function rand(a,b){return Math.floor(Math.random()*(b-a+1))+a}
+function chance(p){return Math.random()<p}
+function makeScenario(){
+ let mode=$("mode").value,targets=mode==="Single Target"?1:mode==="2 Target Cleave"?2:mode==="3+ Target AoE"?rand(3,6):[1,1,2,3,4,5][rand(0,5)];
+ let q={
+  targets,runes:rand(1,6),rp:rand(15,100),km:chance(.62)?(chance(.25)?2:1):0,rime:chance(.45),exterminate:chance(.28),
+  erw:chance(.52)?(chance(.25)?2:1):0,
+  markReady:chance(.34),pillarReady:chance(.34),breathReady:chance(.28),furyReady:chance(.30),
+  breathActive:false
+ };
+ if(q.erw===2) q.runes=Math.min(q.runes,4);
+ return q
+}
+function available(q,id){
+ if(id==="erw")return q.erw>0;if(id==="mark")return q.markReady;if(id==="pillar")return q.pillarReady;if(id==="breath")return q.breathReady&&q.rp>=30;if(id==="fury")return q.furyReady;
+ if(id==="obl"||id==="scythe")return q.runes>=2;if(id==="hb")return q.runes>=1||q.rime;if(id==="fs"||id==="ga")return q.rp>=30;return true
+}
+function spender(q){return q.targets>=3?"ga":"fs"}
+function kmspender(q){return q.targets>=2?"scythe":"obl"}
+function choose(q){
+ let frostbane=$("build").value.includes("Frostbane");
+ if(q.erw>=2)return ["erw","Empower Rune Weapon is highest priority at 2 charges so you do not waste recharge time."];
+ if(q.markReady)return ["mark","Deathbringer wants Reaper's Mark used immediately when available to start the burst cycle."];
+ if(q.pillarReady)return ["pillar","Pillar of Frost is a short cooldown; use it aggressively instead of losing casts."];
+ if(!frostbane && q.breathReady && q.rp>=30)return ["breath","Breath of Sindragosa is available with enough Runic Power, so start the major damage window."];
+ if(q.furyReady)return ["fury","Frostwyrm's Fury is available and sits high in the burst priority."];
+ let kms=kmspender(q);
+ if((q.km>=2 || (q.km>=1&&q.exterminate)) && available(q,kms))return [kms,q.targets>=2?"Spend the high-value Killing Machine state with Frostscythe for cleave/AoE.":"Spend the high-value Killing Machine state with Obliterate."];
+ if(frostbane && q.rime && available(q,"hb"))return ["hb","In the Frostbane variant, the Frostbane/Rime interaction is prioritized before the normal Rime spend."];
+ if(q.rime && available(q,"hb"))return ["hb","Spend Rime with Howling Blast before lower-priority resource fillers."];
+ let sp=spender(q);
+ if(q.rp>=85 && available(q,sp))return [sp,q.targets>=3?"Runic Power is near cap: dump with Glacial Advance in 3+ targets.":"Runic Power is near cap: dump with Frost Strike before wasting generation."];
+ if(q.km>=1 && available(q,kms))return [kms,q.targets>=2?"Spend Killing Machine with Frostscythe in cleave/AoE.":"Spend Killing Machine with Obliterate."];
+ if(q.erw>=1 && q.km===0 && q.runes<=3)return ["erw","With no Killing Machine and low rune pressure, Empower Rune Weapon is the best way to generate momentum and KM."];
+ if(available(q,sp))return [sp,q.targets>=3?"Use Glacial Advance as the regular Runic Power spender at 3+ targets.":"Use Frost Strike as the regular Runic Power spender."];
+ if(available(q,kms))return [kms,q.targets>=2?"No higher proc/cooldown is available: spend runes with Frostscythe.":"No higher proc/cooldown is available: spend runes with Obliterate."];
+ return ["hb","Resources are dry; Howling Blast is the remaining filler."];
+}
+function nextScenario(){
+ Q=makeScenario();locked=false;paintScenario()
+}
+function resetScenario(){nextScenario();paintPriority()}
+function paintScenario(){
+ $("targets").textContent=Q.targets;$("runes").textContent=Q.runes;$("rp").textContent=Q.rp;$("km").textContent=Q.km;$("rime").textContent=Q.rime?"Yes":"No";$("erw").textContent=Q.erw;
+ $("enemy").textContent=Q.targets===1?"Boss / Priority Target":Q.targets===2?"2-Target Cleave":"Mythic+ Trash Pack";
+ $("scen").textContent=`${Q.targets} target${Q.targets>1?"s":""} • choose the highest-DPS next global`;
+ $("procs").innerHTML="";
+ if(Q.km){let x=document.createElement("span");x.className="proc km";x.textContent=`Killing Machine ×${Q.km}`;$("procs").appendChild(x)}
+ if(Q.rime){let x=document.createElement("span");x.className="proc rime";x.textContent="Rime";$("procs").appendChild(x)}
+ if(Q.exterminate){let x=document.createElement("span");x.className="proc ex";x.textContent="Exterminate";$("procs").appendChild(x)}
+ [["markReady","Reaper's Mark ready"],["pillarReady","Pillar ready"],["breathReady","Breath ready"],["furyReady","Frostwyrm ready"]].forEach(([k,t])=>{if(Q[k]){let x=document.createElement("span");x.className="proc";x.textContent=t;$("procs").appendChild(x)}})
+ let ans=choose(Q)[0];$("abilities").innerHTML="";
+ AB.forEach((a,i)=>{let b=document.createElement("button");b.className="ability"+(!available(Q,a.id)?" cooldown":"")+($("difficulty").value==="Learning"&&a.id===ans?" recommended":"");b.disabled=!available(Q,a.id);b.onclick=()=>answer(a.id);b.innerHTML=`<span class="key">${i===9?0:i+1}</span><span class="ico">${a.ico}</span>${a.name}`;$("abilities").appendChild(b)});
+ $("fb").className="feedback";$("fb").innerHTML=`<b>What do you press?</b><br><span class="scenario">${$("difficulty").value==="Expert"?"No hint. Trust the priority.":"Read cooldowns, procs, target count and resources."}</span>`;
+}
+function answer(id){
+ if(locked)return;locked=true;let [right,why]=choose(Q),ok=id===right;S.trainer.total++;
+ if(ok){S.trainer.correct++;S.trainer.streak++;S.trainer.score+=100+Math.min(100,S.trainer.streak*10);S.trainer.best=Math.max(S.trainer.best,S.trainer.streak);$("fb").className="feedback correct";$("fb").innerHTML=`<b>✓ Correct — ${AB.find(a=>a.id===right).name}</b><br><span class="scenario">${why}</span>`}
+ else{S.trainer.streak=0;let picked=AB.find(a=>a.id===id)?.name||id,correct=AB.find(a=>a.id===right)?.name||right;$("fb").className="feedback wrong";$("fb").innerHTML=`<b>✕ ${picked} was lower priority. Best: ${correct}</b><br><span class="scenario">${why}</span>`}
+ save();renderTrainerStats();setTimeout(nextScenario,$("difficulty").value==="Expert"?700:1300)
+}
+function renderTrainerStats(){let t=S.trainer;$("score").textContent=t.score;$("streak").textContent=t.streak;$("best").textContent=t.best;$("acc").textContent=t.total?Math.round(t.correct/t.total*100)+"%":"—"}
+function resetTrainer(){S.trainer={score:0,streak:0,best:0,correct:0,total:0};save();renderTrainerStats();nextScenario()}
+function paintPriority(){
+ let frostbane=$("build").value.includes("Frostbane");
+ let p=["Empower Rune Weapon at 2 charges","Reaper's Mark","Pillar of Frost",frostbane?"Frostbane burst setup":"Breath of Sindragosa","Frostwyrm's Fury","2 KM / Exterminate → KM spender",frostbane?"Frostbane before Rime":"Rime → Howling Blast","Dump Runic Power before cap","1 KM → KM spender","Empower Rune Weapon to generate KM","Normal RP spender","Rune spender / filler"];
+ $("priority").innerHTML=p.map(x=>`<div>${x}</div>`).join("")
+}
+document.addEventListener("keydown",e=>{if(!$("train").classList.contains("active"))return;let n=e.key==="0"?9:parseInt(e.key)-1;if(n>=0&&n<AB.length){let a=AB[n];if(Q&&available(Q,a.id))answer(a.id)}})
+render();paintPriority();nextScenario();
+setTimeout(()=>{
+  const last=S.rio?.lastSync?Date.now()-new Date(S.rio.lastSync).getTime():Infinity;
+  if(last>10*60*1000) refreshRaiderIO(false);
+},350);
+</script>
+</body>
+</html>
